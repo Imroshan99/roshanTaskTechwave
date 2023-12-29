@@ -29,7 +29,7 @@ function Body() {
     setLoader((prevState) => prevState + 1);
     try {
       let result = await axios("https://fakestoreapi.com/products/categories");
-      setState({ categoryList: result.data });
+      setState({ categoryList: result.data.reverse() });
       setLoader((prevState) => prevState - 1);
     } catch (error) {
       console.log(error);
@@ -52,7 +52,7 @@ function Body() {
     setLoader((prevState) => prevState + 1);
     try {
       let result = await axios(`https://fakestoreapi.com/products/category/${e}`);
-      setState({ productList: result.data });
+      setState({ productList: result.data, sortBy: "" });
       setLoader((prevState) => prevState - 1);
     } catch (error) {
       // console.log(error);
