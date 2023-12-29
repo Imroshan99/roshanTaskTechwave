@@ -1,8 +1,9 @@
 import { Form, Select, Spin, Table } from "antd";
 import React, { Fragment, useCallback, useEffect, useReducer, useState } from "react";
 import axios from "axios";
-let { Option } = Select;
+const { Option } = Select;
 function Body() {
+  const [form] = Form.useForm();
   const [state, setState] = useReducer((state, newState) => ({ ...state, ...newState }), {
     isSorted: false,
     sortBy: "",
@@ -34,15 +35,14 @@ function Body() {
     setLoader((prevState) => prevState + 1);
     try {
       let result = await axios("https://fakestoreapi.com/products/");
-      let updatedList = result.data;
-
-      setState({ productList: updatedList });
+      setState({ productList: result.data });
       setLoader((prevState) => prevState - 1);
     } catch (err) {
       console.log(err);
     }
   };
   const filterCategory = useCallback(async (e) => {
+    form.setFieldsValue({ sort: "" });
     setLoader((prevState) => prevState + 1);
     let result = await axios(`https://fakestoreapi.com/products/category/${e}`);
     setState({ productList: result.data });
@@ -85,9 +85,9 @@ function Body() {
         <div className="mt-2">
           <div className="row">
             <div className="col-md-3">
-              <Form>
-                <Form.Item>
-                  <label>Select Category</label>
+              <Form form={form}>
+                <label>Select Category</label>
+                <Form.Item name="category">
                   <Select onChange={filterCategory} placeholder="Select Category">
                     {state.categoryList.map((items) => (
                       <Option value={items} key={items}>
@@ -96,8 +96,8 @@ function Body() {
                     ))}
                   </Select>
                 </Form.Item>
-                <Form.Item>
-                  <label>Sort By Price</label>
+                <label>Sort By Price</label>
+                <Form.Item name="sort">
                   <Select
                     placeholder="Sort By Price"
                     onChange={(e) => setState({ isSorted: true, sortBy: e })}
