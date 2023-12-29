@@ -4,9 +4,10 @@ body,
   box-sizing: border-box;
 }
 
-body {
+.App {
   font-family: Arial, sans-serif;
-  background-color: #f0f0f0;
+  font-weight: 500;
+  background: #dfe3e6;
 }
 
 /* .App {
