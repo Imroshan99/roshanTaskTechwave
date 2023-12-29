@@ -1,4 +1,4 @@
-import { Form, Select, Spin, Table } from "antd";
+import { Form, Select, Spin, Table, notification } from "antd";
 import React, { Fragment, useCallback, useEffect, useReducer, useState } from "react";
 import axios from "axios";
 const { Option } = Select;
@@ -27,9 +27,14 @@ function Body() {
 
   const getCategory = async () => {
     setLoader((prevState) => prevState + 1);
-    let result = await axios("https://fakestoreapi.com/products/categories");
-    setState({ categoryList: result.data });
-    setLoader((prevState) => prevState - 1);
+    try {
+      let result = await axios("https://fakestoreapi.com/products/categories");
+      setState({ categoryList: result.data });
+      setLoader((prevState) => prevState - 1);
+    } catch (error) {
+      console.log(error);
+      notification.error({ message: error });
+    }
   };
   const getProductList = async (e) => {
     setLoader((prevState) => prevState + 1);
@@ -39,14 +44,20 @@ function Body() {
       setLoader((prevState) => prevState - 1);
     } catch (err) {
       console.log(err);
+      notification.error({ message: err });
     }
   };
   const filterCategory = useCallback(async (e) => {
     form.setFieldsValue({ sort: "" });
     setLoader((prevState) => prevState + 1);
-    let result = await axios(`https://fakestoreapi.com/products/category/${e}`);
-    setState({ productList: result.data });
-    setLoader((prevState) => prevState - 1);
+    try {
+      let result = await axios(`https://fakestoreapi.com/products/category/${e}`);
+      setState({ productList: result.data });
+      setLoader((prevState) => prevState - 1);
+    } catch (error) {
+      // console.log(error);
+      notification.error({ message: error });
+    }
   }, []);
 
   let columns = [
