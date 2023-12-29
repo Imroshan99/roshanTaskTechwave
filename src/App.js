@@ -1,12 +1,14 @@
+import React, { Suspense, lazy } from "react";
 import "./App.css";
-import Body from "./components/Body";
-import Header from "./components/Header";
-
+let Body = lazy(() => import("./components/Body"));
+let Header = lazy(() => import("./components/Header"));
 function App() {
   return (
     <div className="App p-2">
-      <Header />
-      <Body />
+      <Suspense fallback={"Loading..."}>
+        <Header />
+        <Body />
+      </Suspense>
     </div>
   );
 }
