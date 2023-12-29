@@ -1,4 +1,5 @@
-export default function Header() {
+import React from "react";
+function Header() {
   return (
     <>
       <div className="bg-warning p-2 mt-2 d-flex justify-content-center align-items-center">
@@ -7,3 +8,4 @@ export default function Header() {
     </>
   );
 }
+export default React.memo(Header);
