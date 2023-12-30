@@ -30,7 +30,7 @@ function Body() {
       setLoader((prevState) => prevState + 1);
       let result = await axios("https://fakestoreapi.com/products/categories/");
       // console.log(result, "RRRR result");
-      if (!result) {
+      if (!result?.data) {
         throw new Error("Network response not found");
       } else {
         setState({ categoryList: result.data.reverse() });
@@ -47,13 +47,13 @@ function Body() {
     try {
       setLoader((prevState) => prevState + 1);
       let result = await axios("https://fakestoreapi.com/products/");
-      if (!result) {
+      if (!result?.data) {
         throw new Error("Network response was not ok");
       } else {
         setState({ productList: result.data });
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err, "RRRR prlist");
       notification.error({ message: err.message });
     } finally {
       setLoader((prevState) => prevState - 1);
@@ -64,7 +64,7 @@ function Body() {
       form.setFieldsValue({ sort: "" });
       setLoader((prevState) => prevState + 1);
       let result = await axios(`https://fakestoreapi.com/products/category/${e}`);
-      if (!result) {
+      if (result.data.length === 0) {
         throw new Error("Network response was not ok");
       } else {
         setState({ productList: result.data, sortBy: "" });
