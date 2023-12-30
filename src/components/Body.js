@@ -26,37 +26,54 @@ function Body() {
   }, [state.sortBy]);
 
   const getCategory = async () => {
-    setLoader((prevState) => prevState + 1);
     try {
-      let result = await axios("https://fakestoreapi.com/products/categories");
-      setState({ categoryList: result.data.reverse() });
-      setLoader((prevState) => prevState - 1);
+      setLoader((prevState) => prevState + 1);
+      let result = await axios("https://fakestoreapi.com/products/categories/");
+      // console.log(result, "RRRR result");
+      if (!result) {
+        throw new Error("Network response not found");
+      } else {
+        setState({ categoryList: result.data.reverse() });
+      }
     } catch (error) {
-      console.log(error);
-      notification.error({ message: error });
+      // console.error(error);
+      notification.error({ message: error.message });
+    } finally {
+      setLoader((prevState) => prevState - 1);
     }
   };
+
   const getProductList = async (e) => {
-    setLoader((prevState) => prevState + 1);
     try {
+      setLoader((prevState) => prevState + 1);
       let result = await axios("https://fakestoreapi.com/products/");
-      setState({ productList: result.data });
-      setLoader((prevState) => prevState - 1);
+      if (!result) {
+        throw new Error("Network response was not ok");
+      } else {
+        setState({ productList: result.data });
+      }
     } catch (err) {
       console.log(err);
-      notification.error({ message: err });
+      notification.error({ message: err.message });
+    } finally {
+      setLoader((prevState) => prevState - 1);
     }
   };
   const filterCategory = useCallback(async (e) => {
-    form.setFieldsValue({ sort: "" });
-    setLoader((prevState) => prevState + 1);
     try {
+      form.setFieldsValue({ sort: "" });
+      setLoader((prevState) => prevState + 1);
       let result = await axios(`https://fakestoreapi.com/products/category/${e}`);
-      setState({ productList: result.data, sortBy: "" });
-      setLoader((prevState) => prevState - 1);
+      if (!result) {
+        throw new Error("Network response was not ok");
+      } else {
+        setState({ productList: result.data, sortBy: "" });
+      }
     } catch (error) {
       // console.log(error);
-      notification.error({ message: error });
+      notification.error({ message: error.message });
+    } finally {
+      setLoader((prevState) => prevState - 1);
     }
   }, []);
 
